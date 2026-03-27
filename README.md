@@ -20,14 +20,19 @@ cmake -B build-windows -DCMAKE_TOOLCHAIN_FILE=toolchains/mingw-w64-x86_64.cmake
 cmake --build build-windows
 ```
 
-4. Retrieve compiled header and move it to the correct location
+4. Install the compiled library with its header (optional, you can also just retrieve the now compiled library from the build directory to do what you want with it)
 ```bash
-# Look inside build/ and build-windows/ for the .a file and .lib file respectively
-# On Linux, move the file to a global library directory if not there already
-mv ldpasswd.a /usr/local/lib/
+# Linux
+sudo cmake --install build
+
+# Windows
+sudo cmake --install build-windows
 ```
-```powershell
-# On Windows, move .lib file to project root for static compilation
+
+5. Clean up environment
+```bash
+rm -rf build/
+rm -rf build-windows/
 ```
 
 ## For developers

@@ -19,10 +19,10 @@ set_target_properties(ldpasswd PROPERTIES
 )
 
 # Add an executable to test the library
-add_executable(TestLDP main.c)
+add_executable(testldp tests/test.c)
 
 # Link the executable with the library
-target_link_libraries(TestLDP PRIVATE ldpasswd)
+target_link_libraries(testldp PRIVATE ldpasswd)
 
 # Install compiled library
 install(TARGETS ldpasswd
