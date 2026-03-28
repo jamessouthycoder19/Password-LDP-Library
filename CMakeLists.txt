@@ -1,6 +1,9 @@
 cmake_minimum_required(VERSION 3.15)
 project(LDPasswd VERSION 1.0 LANGUAGES C)
 
+# find the json-c library
+find_package(json-c CONFIG REQUIRED)
+
 # Generate static .a or .lib file
 add_library(ldpasswd STATIC 
     src/ldpasswd.c
@@ -20,6 +23,9 @@ set_target_properties(ldpasswd PROPERTIES
 
 # Add an executable to test the library
 add_executable(testldp tests/test.c)
+
+# link the library with json-c
+target_link_libraries(ldpasswd PUBLIC json-c::json-c)
 
 # Link the executable with the library
 target_link_libraries(testldp PRIVATE ldpasswd)
