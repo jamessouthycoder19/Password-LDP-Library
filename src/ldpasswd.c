@@ -78,20 +78,18 @@ void hello(void) {
     }
 
     // Array to hold 6 string pointers
-    const char *lines[6];
+    const char *raw_lines;
     char *temp_line = NULL;
     size_t len = 0;
-    int count = 0;
 
     // getline handles the memory allocation for the temporary read
-    while (count < 6 && getline(&temp_line, &len, file) != -1) {
+    while (getline(&temp_line, &len, file) != -1) {
         
         // Remove trailing newline if present
         temp_line[strcspn(temp_line, "\r\n")] = '\0';
 
         // Use strdup to create a permanent copy for our array
-        lines[count] = strdup(temp_line);
-        count++;
+        raw_lines = strdup(temp_line);
     }
 
     // Free the temporary buffer used by getline
@@ -99,19 +97,33 @@ void hello(void) {
     fclose(file);
 
     struct json_tokener *tok = json_tokener_new();
-    const struct json_object *json_dicts[6];
+    const struct json_object *json_dict;
     // const char *json_str = "{\"name\": \"Alice\", \"age\": 30, \"is_student\": false}";
-    for (int i = 0; i < count; i++) {
-        json_dicts[i] = json_tokener_parse_ex(tok, lines[i], strlen(lines[i]));
-    }
+    json_dict = json_tokener_parse_ex(tok, raw_lines, strlen(raw_lines));
 
     json_tokener_free(tok);
+    free((void *)raw_lines);
 
-    for (int i = 0; i < count; i++) {
-        printf("Parsed JSON Object %d: %s\n", i + 1, json_object_to_json_string(json_dicts[i]));
-        free((void *)lines[i]);
-        json_object_put((struct json_object *)json_dicts[i]);
+    // At this point all of the JSON wordlists have bene parsed correctly. 
+    // This wil obviously get organized better into functions and what not
+    // but after this is how we would tokenize a password and what not
+
+    const char *example_password = "JamesPassword123!";
+
+    // Split up into tokens of length 2
+    char tokens[100][3]; // Assuming max 100 tokens of length 2
+    int token_count = 0;
+    for (int i = 0; i < strlen(example_password); i += 2) {
+        snprintf(tokens[token_count], sizeof(tokens[token_count]), "%c%c", example_password[i], example_password[i + 1]);
+        token_count++;
     }
+
+    for (int i = 0; i < token_count; i++) {
+        printf("Token %d: %s\n", i + 1, tokens[i]);
+    }
+
+    // Below this is cleanup code to free the memory allocated for the lines and the json objects.
+    json_object_put((struct json_object *)json_dict);
 
     return 0;
 }

@@ -15,10 +15,9 @@ json_file = "data.txt"
 with open ("../data/" + json_file, "w") as f:
     f.write("")
 
+json_data = {}
+
 for file in files:
-
-    json_data = {}
-
     split = False
     if file == "english_wikipedia.txt" or file == "passwords.txt" or file == "us_tv_and_film.txt":
         split = True
@@ -58,5 +57,5 @@ for file in files:
                 print(f"Current dict: {current_dict}")
                 raise e
             
-        with open("../data/" + json_file, "a") as f:
-            f.write(json.dumps(json_data) + "\n")
+with open("../data/" + json_file, "a") as f:
+    f.write(json.dumps(json_data) + "\n")
