@@ -1,10 +1,10 @@
 files = [
+    "passwords.txt",
+    "english_wikipedia.txt",
+    "us_tv_and_film.txt",
     "surnames.txt",
     "male_names.txt",
     "female_names.txt",
-    "english_wikipedia.txt",
-    "passwords.txt",
-    "us_tv_and_film.txt",
     ]
 
 json_file = "data.txt"
