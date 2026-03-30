@@ -414,7 +414,7 @@ def perturb_word(word: str, eps: float, nearest_neighbors: int = 10) -> str:
     
     # Debug print currently left in place to show candidate space and utilities.
     # Example format: ['password', 'pass', ...] [0, -1, ...]
-    print(neighbors, traversal_distances)
+    # print(neighbors, traversal_distances)
 
     # Sample a replacement with the exponential mechanism.
     # Higher utility (closer to 0 here) gets higher probability.
