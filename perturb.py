@@ -385,9 +385,10 @@ def perturb_word(word: str, eps: float, nearest_neighbors: int = 10) -> str:
         cur = get_node(path)
 
         # If this path is a complete word, add it as a candidate.
+        # Only keep neighbors with length > 2 to avoid tiny/low-signal words.
         if cur["_is_word"]:
             candidate = "".join(path)
-            if candidate not in seen_words:
+            if len(candidate) > 2 and candidate not in seen_words:
                 seen_words.add(candidate)
                 neighbors.append(candidate)
                 traversal_distances.append(-dist)
@@ -482,6 +483,18 @@ def perturb(password: str, eps: float = 1.0) -> str:
 
 def main():
     perturbed_pass = perturb("Apple432Bottom#", 2.0)
+    print(perturbed_pass)
+    perturbed_pass = perturb("Password123!", 2.0)
+    print(perturbed_pass)
+    perturbed_pass = perturb("LemonJumpSlide1#", 2.0)
+    print(perturbed_pass)
+    perturbed_pass = perturb("MaxPassword", 2.0)
+    print(perturbed_pass)
+    perturbed_pass = perturb("iamaword2", 2.0)
+    print(perturbed_pass)
+    perturbed_pass = perturb("Welcome1", 2.0)
+    print(perturbed_pass)
+    perturbed_pass = perturb("Red1Team2Suckz3", 2.0)
     print(perturbed_pass)
 
 if (__name__ == '__main__'):
