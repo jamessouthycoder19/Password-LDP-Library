@@ -465,8 +465,8 @@ def perturb(password: str, eps: float = 1.0) -> str:
     tokens, token_types = tokenize(password)
     # print(f"Tokenization: {tokens}")
 
-    semantic_budget = eps / 2
-    diction_budget = eps / 2
+    semantic_budget = eps / (len(tokens) + 1)
+    diction_budget = (len(tokens) * eps) / (len(tokens) + 1)
 
     tokens, token_types = semantically_perturb(tokens, token_types, semantic_budget)
 
