@@ -518,14 +518,18 @@ def main():
     for eps in eps_vals:
         num_different = 0
         # perturbed_passwords = []
-        for i in range(10):
+        for i in range(100):
             for password in irsec_passwords:
-                if password != perturb(password, eps):
+                new_pass = perturb(password, eps)
+                if password.lower() != new_pass.lower():
                     num_different += 1
+                    # print(f"Epsilon: {eps}, Original: {password}, Perturbed: {new_pass}")
             for password in passwords:
-                if password != perturb(password, eps):
+                new_pass = perturb(password, eps)
+                if password.lower() != new_pass.lower():
                     num_different += 1
-        print(f"Epsilon: {eps}, Different Passwords: {num_different} / {(len(passwords) + len(irsec_passwords)) * 10}")
+                    # print(f"Epsilon: {eps}, Original: {password}, Perturbed: {new_pass}")
+        print(f"Epsilon: {eps}, Different Passwords: {num_different} / {(len(passwords) + len(irsec_passwords)) * 100}")
         # perturbed_passwords.append((password, perturb(password, eps)))
         # perturbed[eps] = perturbed_passwords
     
