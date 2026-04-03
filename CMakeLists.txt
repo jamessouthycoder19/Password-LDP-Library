@@ -6,7 +6,11 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 
 # Define the Static Library
-add_library(ldpasswd STATIC src/ldpasswd.c)
+add_library(ldpasswd STATIC 
+    src/ldpasswd.c
+    src/tokenize.c
+    src/leet.c
+)
 
 # Configure Library Headers
 target_include_directories(ldpasswd PUBLIC
