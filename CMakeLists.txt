@@ -10,6 +10,7 @@ add_library(ldpasswd STATIC
     src/ldpasswd.c
     src/tokenize.c
     src/leet.c
+    src/perturb.c
 )
 
 # Configure Library Headers
@@ -25,6 +26,12 @@ set_target_properties(ldpasswd PROPERTIES
 
 # Add the executable (After the library is defined)
 add_executable(testldp tests/test.c)
+
+# Find the math library
+find_library(MATH_LIBRARY m)
+
+# Link it to your executable or library
+target_link_libraries(ldpasswd PRIVATE ${MATH_LIBRARY})
 
 # Link the executable with the library
 target_link_libraries(testldp PRIVATE ldpasswd)

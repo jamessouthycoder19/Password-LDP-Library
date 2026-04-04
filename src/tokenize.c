@@ -97,7 +97,7 @@ void find_word(const char *pw, int* last_valid_depth, float *costs) {
  * The start indices of each token in the original password are stored in the start_of_token_indicies array, 
  * and the type of each token is stored in the token_types array (word, number, special, or other).
  */
-int tokenize_password(const char *pw, int *start_of_token_indices, char *token_types) {
+int tokenize_password(const char *pw, int *start_of_token_indices, char *token_types, char *unleeted_pw) {
     int pw_length = strlen(pw);
     int token_count = 0;
 
@@ -122,6 +122,8 @@ int tokenize_password(const char *pw, int *start_of_token_indices, char *token_t
         // We need a split penalty to prevent "P"+"a"+"s" being cheaper than "Pas"
         float split_penalty = 5.0f; 
 
+        // Variable to temporarily store the unleeted word used to find the lowest cost
+        char *temp_best_unleeted_ptr = NULL;
         
         /**
          * Start by finding the best possible word starting at index i.
@@ -160,7 +162,9 @@ int tokenize_password(const char *pw, int *start_of_token_indices, char *token_t
 
                             // If this path has a valid follow-up word and it's cheaper than 
                             // the best follow-up cost we've found so far, update it
-                            if (c < best_follow_up_cost) best_follow_up_cost = c;
+                            if (c < best_follow_up_cost) {
+                                best_follow_up_cost = c;
+                            }
                         } else {
                             best_follow_up_cost = 0; // End of string is "free"
                         }
@@ -173,6 +177,7 @@ int tokenize_password(const char *pw, int *start_of_token_indices, char *token_t
                         best_total_path_cost = total_path_cost;
                         best_len = len;
                         best_word_cost = word1_cost;
+                        temp_best_unleeted_ptr = results.strings[j] + i;
                     }
                 }
             }
@@ -183,19 +188,28 @@ int tokenize_password(const char *pw, int *start_of_token_indices, char *token_t
 
         if (best_len > 0 && (best_len > 1 || isalpha(pw[i]))) {
             token_types[token_count] = 'w';
+            // Safety check: if for some reason temp_best_unleeted_ptr is NULL, 
+            // fallback to original, though with the logic above it shouldn't be.
+            const char *src = temp_best_unleeted_ptr ? temp_best_unleeted_ptr : (pw + i);
+            memcpy(unleeted_pw + i, src, best_len);
             i += best_len;
         } 
         else if (isdigit(pw[i])) {
             // If we find a number, it'll keep looking for the next number, to keep them all together as 1 token
             token_types[token_count] = 'n';
-            while (i < pw_length && isdigit(pw[i])) i++;
+            while (i < pw_length && isdigit(pw[i])) {
+                unleeted_pw[i] = pw[i];
+                i++;
+            }
         }
         else if (ispunct(pw[i])) {
             token_types[token_count] = 's';
+            unleeted_pw[i] = pw[i];
             i++;
         }
         else {
             token_types[token_count] = 'o';
+            unleeted_pw[i] = pw[i];
             i++;
         }
         token_count++;
