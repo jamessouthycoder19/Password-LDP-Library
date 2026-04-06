@@ -1,35 +1,33 @@
-# Python implementation of potential algorithm
-Consideration - split privacy budget among perturbation types
-
-## perturb() main public function
+## perturb_password() main public function
 ```py
-def perturb(password: str, eps: float) -> str:
-    # current implementation of tokenize_password (pythonized)
-    # tokens = List[str]
-    # token_types = List[str]
-    tokens, token_types = tokenize_password(password)
+def perturb_password(password: str, eps: float) -> str:
+    unleeted_password = unleet_password(password)
+    tokens, token_types = tokenize_password(unleeted_password)
 
-    swapping_budget = eps / 2.0
-    diction_budget = eps / 2.0
-
-    # swapping occurs in place
-    tokens, token_types = perturb_semantics(password, swapping_budget)
-
-    # diction editing will occur in place
+    # Divy up Privacy Budget
+    semantic_budget = eps / (len(tokens) + 1)
+    diction_budget = (len(tokens) * eps) / (len(tokens) + 1)
     budget_per_token = diction_budget / len(tokens)
+
+    # Diction Perturbment
     for i in range(len(tokens)):
         token = tokens[i]
         token_type = token_types[i]
-        if token_type == "w":
+        if token_type == "word":
             tokens[i] = perturb_word(token, budget_per_token)
-        if token_type == "n":
+        if token_type == "number":
             tokens[i] = perturb_number(token, budget_per_token)
-        if token_type == "s":
+        if token_type == "special":
             tokens[i] = perturb_special(token, budget_per_token)
 
-    return ''.join(tokens)
+    # Semantic Perturbment
+    perturb_semantics(password, semantic_budget)
+
+    perturbed_password = fix_leet_password(password, ''.join(tokens))
+
+    return perturbed_password
 ```
 
-## perturb_semantics
+## tokenize_password
 ```py
 ```

@@ -8,7 +8,13 @@
 #include "ldpasswd/tokenize.h"
 #include "ldpasswd/leet.h"
 
-void perturb(char *pw, double eps){
+/**
+ * Perturbs a password via LDPasswd. Epsilon is the privacy parameter
+ * Ensure that the *pw buffer contains twice as much space as the original password to accomodate for growth when perturbing
+ */
+void perturb_password(char *pw, double eps){
+    srand(time(NULL));
+
     // Array to hold starting indices of each token
     int *start_of_token_indicies = malloc(20 * sizeof(int));
     for (int i = 0; i < 20; i++) {
@@ -90,51 +96,4 @@ void perturb(char *pw, double eps){
     free(token_types);
     free(start_of_token_indicies);
     free(start_of_token_indicies_after_perturbing);
-}
-
-void hello() {
-    srand(time(NULL));
-    char test_pws[][64] = {
-        "musketeer333marshmallow",
-        "!blah#Thing^",
-        "Password7JamesTh1ngFather",
-        "PassWord123",
-        "Unknownword",
-        "jamesblahblahblah",
-        "P@sSw0Rd",
-        "passw0rdRed14&TeamSucks",
-        "123PassWord123",
-        "1Unknown(((wordBlah",
-        "P@sSw0RdJ4mes",
-        "Change.me123!",
-        "starburst",
-        "PleaseDont5489CH32",
-        "Super123!?",
-        "VikingWorksAgain!",
-        "RedTeamIsUgly!!",
-        "White#Comet192@Map28",
-        "WhyAreWeStillHere2015?",
-        "foobarbaz5",
-        "weloveyouredteam",
-        "RickerBalls2",
-        "Idkwhatimdoinghelp1",
-        "ThankYouWhiteTeam",
-        "Apple432Bottom#",
-        "Welcome1",
-        "RedTeamSucks3",
-        "LemonJumpSlide1#",
-        "AngleBatman1!"
-    };
-
-    double epsilon_values[] = {20, 15, 10, 5, 2.5, 1};
-
-    for (int i = 0; i < 29; i++) {
-        printf("\nBefore      : %s\n", test_pws[i]);
-        for (int j = 0; j < 6; j++) {
-            char temp[64];
-            strncpy(temp, test_pws[i], 64);
-            perturb(temp, epsilon_values[j]);
-            printf("After e=%.1f: %s\n", epsilon_values[j], temp);
-        }
-    }
 }

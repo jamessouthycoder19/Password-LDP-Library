@@ -1,6 +1,6 @@
 #ifndef LDPASSWD_H
 #define LDPASSWD_H
 
-void hello(void);
+void perturb_password(char *pw, double eps);
 
 #endif
