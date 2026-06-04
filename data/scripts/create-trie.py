@@ -37,12 +37,6 @@ def generate_binary_table(wordlist_paths):
                 frequency = int(parts[1]) if len(parts) > 1 and parts[1].isdigit() else DEFAULT_FREQUENCY
                 total_frequency += frequency
 
-                # Boost the frequency of a some important words to ensure that they are tokenized correctly, 
-                # even if they don't appear in the wordlists with a high frequency.
-                if word in IMPORTANT_WORDS:
-                    frequency += 1000000 
-                    total_frequency += 1000000
-                
                 # Insert into Trie, add vars for it's children, and if it's a word or not, and the frequency of the word (if it is a word)
                 curr = root
                 for i, char in enumerate(word):
@@ -53,6 +47,8 @@ def generate_binary_table(wordlist_paths):
                         curr[char]["freq"] += frequency
                     curr = curr[char]["children"]
 
+    # Boost the frequency of a some important words to ensure that they are tokenized correctly, 
+    # even if they don't appear in the wordlists with a high frequency / appear at all.
     for word in IMPORTANT_WORDS:
         if word not in root:
             curr = root
